@@ -143,6 +143,7 @@ End reset
   height: 30px;
   margin-left: 5px;
   margin-right: 5px;
+  cursor: pointer;
 }
 
 .full-circle {
@@ -155,4 +156,5 @@ End reset
   height: 30px;
   margin-left: 5px;
   margin-right: 5px;
+  cursor: pointer;
 }

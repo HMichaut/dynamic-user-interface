@@ -5,13 +5,11 @@ const bubbleViewer = document.getElementById('circle-container');
 let currentSlide = 0;
 
 rightBtn.addEventListener('click', () => {
-  const slideStatus = getCssProperty('slide', 'transform');
-  slide.style.transform = updateLeftValue(slideStatus, getScreenwidth());
+  slide.style.transform = updateLeftValue(1);
 });
 
 leftBtn.addEventListener('click', () => {
-  const slideStatus = getCssProperty('slide', 'transform');
-  slide.style.transform = updateLeftValue(slideStatus, -getScreenwidth());
+  slide.style.transform = updateLeftValue(-1);
 });
 
 function getCssProperty(elmId, property){
@@ -19,13 +17,26 @@ function getCssProperty(elmId, property){
   return window.getComputedStyle(elem,null).getPropertyValue(property);
 }
 
-function updateLeftValue(inputStr, addedValue) {
-  const initialValue = parseInt(inputStr.slice(19, -4));
-  const slideWidth = 5000;
-  console.log(initialValue - addedValue);
-  
-  if ((initialValue - addedValue < -slideWidth) || (initialValue - addedValue > 0)) {
-    return "translate(" + initialValue + "px)";
+function updateCurrentSlide(num) {
+  currentSlide = num;
+  slide.style.transform = updateLeftValue(0);
+  resetBubbleViewer();
+}
+
+function addEventListenerToAllBubbleButtons() {
+  const bubbleList = bubbleViewer.children;
+  for (let i = 0; i < bubbleList.length; i++) {
+    if (bubbleList[i].nodeType === 1) {
+      bubbleList[i].addEventListener('click', () => {
+        updateCurrentSlide(i);
+      });
+    }
+  };
+}
+
+function updateLeftValue(addedValue) {
+  if (currentSlide + addedValue > (getSlideNumber() - 1) || (0 > currentSlide + addedValue || addedValue === 0)) {
+    return "translate(" + (currentSlide * -getScreenwidth(currentSlide)) + "px)";
   } else {
     if (addedValue > 0) {
       currentSlide = currentSlide + 1;
@@ -34,13 +45,17 @@ function updateLeftValue(inputStr, addedValue) {
     }
     
     resetBubbleViewer();
-    return "translate(" + (initialValue - addedValue) + "px)";
+    return "translate(" + (currentSlide * -getScreenwidth(currentSlide)) + "px)";
   };
 }
 
-function getScreenwidth() {
-  // return window.screen.width;
-  return 1004;
+function getSlideNumber() {
+  return bubbleViewer.children.length;;
+}
+
+function getScreenwidth(currentSlide) {
+  console.log(slide.children[currentSlide].offsetWidth)
+  return slide.children[currentSlide].offsetWidth + 4;
 }
 
 function resetBubbleViewer () {
@@ -49,16 +64,13 @@ function resetBubbleViewer () {
   for (let i = 0; i < bubbleList.length; i++) {
     bubbleList[i].className = "empty-circle";
   };
-  // console.log(currentSlide);
-  // console.log(bubbleList[currentSlide]);
-
   circleToUpdate.className = "full-circle";
 };
 
 const interval = setInterval(function() {
   const slideStatus = getCssProperty('slide', 'transform');
-  slide.style.transform = updateLeftValue(slideStatus, getScreenwidth());
-  console.log(currentSlide);
+  slide.style.transform = updateLeftValue(1);
 }, 5000);
 
-// clearInterval(interval);
+resetBubbleViewer();
+addEventListenerToAllBubbleButtons();
