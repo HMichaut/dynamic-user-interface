@@ -60,20 +60,31 @@ End reset
   background-color: lime;
 }
 
-.content {
+.img-2 {
+  display: inline-block;
+  text-align: center;
+  width: 400px;
+  height: 700px;
+  background-color: lime;
+}
+
+#content {
   white-space: normal;
   position: absolute;
   width: 1000px;
   height: 500px;
   overflow: hidden;
+  transition-property: width, height;
+  transition-duration: 0.5s, 0.5s;
 }
 
 #slide {
   white-space: nowrap;
+  display: flex;
   position: absolute;
   transform: translate(0px);
   transition-property: transform;
-  transition-duration: 0.5s;
+  transition-duration: 1s;
   z-index: -1;
 }
 
@@ -122,16 +133,17 @@ End reset
 }
 
 #circle-container {
-  width: 1000px;
   height: 80px;
   position: absolute;
-  top: 500px;
+  transform: translate(0px, 1000px);
   display: flex;
   justify-content: center;
+  transition-property: width, transform;
+  transition-duration: 0.5s, 0.5s;
 }
 
 .viewer {
-  height: 500px;
+  display: flex;
 }
 
 .empty-circle {

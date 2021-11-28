@@ -2,6 +2,8 @@ const slide = document.getElementById('slide');
 const leftBtn = document.getElementById('left-travel');
 const rightBtn = document.getElementById('right-travel');
 const bubbleViewer = document.getElementById('circle-container');
+const content = document.getElementById('content');
+const circleContainer = document.getElementById('circle-container');
 let currentSlide = 0;
 
 rightBtn.addEventListener('click', () => {
@@ -21,6 +23,8 @@ function updateCurrentSlide(num) {
   currentSlide = num;
   slide.style.transform = updateLeftValue(0);
   resetBubbleViewer();
+  resetContentHeight(getScreenheight(currentSlide));
+  resetContentWidth(getScreenwidth(currentSlide));
 }
 
 function addEventListenerToAllBubbleButtons() {
@@ -36,7 +40,7 @@ function addEventListenerToAllBubbleButtons() {
 
 function updateLeftValue(addedValue) {
   if (currentSlide + addedValue > (getSlideNumber() - 1) || (0 > currentSlide + addedValue || addedValue === 0)) {
-    return "translate(" + (currentSlide * -getScreenwidth(currentSlide)) + "px)";
+    return "translate(" + -computeTranslateTotal(currentSlide) + "px)";
   } else {
     if (addedValue > 0) {
       currentSlide = currentSlide + 1;
@@ -45,7 +49,9 @@ function updateLeftValue(addedValue) {
     }
     
     resetBubbleViewer();
-    return "translate(" + (currentSlide * -getScreenwidth(currentSlide)) + "px)";
+    resetContentHeight(getScreenheight(currentSlide));
+    resetContentWidth(getScreenwidth(currentSlide));
+    return "translate(" + -computeTranslateTotal(currentSlide) + "px)";
   };
 }
 
@@ -53,9 +59,31 @@ function getSlideNumber() {
   return bubbleViewer.children.length;;
 }
 
+function computeTranslateTotal(currentSlide) {
+  let total = 0;
+  for (let i = 0; i < currentSlide; i++) {
+    total = total + getScreenwidth(i);
+  };
+  console.log(total);
+  return total;
+}
+
+function getScreenheight(currentSlide) {
+  return slide.children[currentSlide].offsetHeight;
+}
+
 function getScreenwidth(currentSlide) {
-  console.log(slide.children[currentSlide].offsetWidth)
-  return slide.children[currentSlide].offsetWidth + 4;
+  return slide.children[currentSlide].offsetWidth;
+}
+
+function resetContentHeight(height) {
+  content.style.height = height + "px";
+  circleContainer.style.transform = "translate(0, " + height + "px";
+}
+
+function resetContentWidth(width) {
+  content.style.width = width + "px";
+  circleContainer.style.width = width + "px";
 }
 
 function resetBubbleViewer () {
@@ -70,7 +98,9 @@ function resetBubbleViewer () {
 const interval = setInterval(function() {
   const slideStatus = getCssProperty('slide', 'transform');
   slide.style.transform = updateLeftValue(1);
-}, 5000);
+}, 10000);
 
 resetBubbleViewer();
+resetContentHeight(getScreenheight(currentSlide))
+resetContentWidth(getScreenwidth(currentSlide));
 addEventListenerToAllBubbleButtons();
